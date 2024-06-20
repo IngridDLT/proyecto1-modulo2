@@ -13,8 +13,8 @@
   </div>
 </template>
 
+
 <script>
-import { ref, onMounted } from 'vue'
 import ProductCard from './ProductCard.vue'
 import SearchBar from './SearchBar.vue'
 
@@ -24,55 +24,42 @@ export default {
     SearchBar,
   },
   emits: ['select-product', 'add-to-cart'],
-  setup(_, { emit }) {
-    const products = ref([])
-    const filteredProducts = ref([])
-    const categories = ref([])
-
-    onMounted(async () => {
-      await fetchProducts()
-      await fetchCategories()
-    })
-
-    const fetchProducts = async () => {
-      const res = await fetch('https://fakestoreapi.com/products')
-      const data = await res.json()
-      products.value = data
-      filteredProducts.value = data
-    }
-
-    const fetchCategories = async () => {
-      const res = await fetch('https://fakestoreapi.com/products/categories')
-      const data = await res.json()
-      categories.value = data
-    }
-
-    const filterProductsByCategory = (category) => {
-      if (category === "") {
-        filteredProducts.value = products.value
-      } else {
-        filteredProducts.value = products.value.filter(product => product.category === category)
-      }
-    }
-
-    const selectProduct = (productId) => {
-      emit('select-product', productId)
-    }
-
-    const addToCart = (product) => {
-      emit('add-to-cart', product)
-    }
-
+  data() {
     return {
-      products,
-      filteredProducts,
-      categories,
-      fetchProducts,
-      fetchCategories,
-      filterProductsByCategory,
-      selectProduct,
-      addToCart,
+      products: [],
+      filteredProducts: [],
+      categories: [],
     }
   },
+  mounted() {
+    this.fetchProducts()
+    this.fetchCategories()
+  },
+  methods: {
+    async fetchProducts() {
+      const res = await fetch('https://fakestoreapi.com/products')
+      const data = await res.json()
+      this.products = data
+      this.filteredProducts = data
+    },
+    async fetchCategories() {
+      const res = await fetch('https://fakestoreapi.com/products/categories')
+      const data = await res.json()
+      this.categories = data
+    },
+    filterProductsByCategory(category) {
+      if (category === "") {
+        this.filteredProducts = this.products
+      } else {
+        this.filteredProducts = this.products.filter(product => product.category === category)
+      }
+    },
+    selectProduct(productId) {
+      this.$emit('select-product', productId)
+    },
+    addToCart(product) {
+      this.$emit('add-to-cart', product)
+    }
+  }
 }
 </script>

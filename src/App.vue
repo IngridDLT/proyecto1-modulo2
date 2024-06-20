@@ -5,8 +5,8 @@
       <div class="flex items-center">
         <i 
           class="fa-solid fa-cart-shopping text-2xl cursor-pointer" 
-          @click="toggleCart"
-        ></i>
+          @click="toggleCart">
+        </i>
         <span class="ml-2 text-lg">{{ cartItems.length }}</span>
       </div>
     </div>
